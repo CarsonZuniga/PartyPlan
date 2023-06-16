@@ -1,0 +1,19 @@
+SELECT DISTINCT *
+FROM ActiveParty NATURAL JOIN (SELECT u.userID, AVG(safety) as safety, AVG(fun) as fun
+    FROM User u JOIN Rating r ON (u.userID = r.userID)
+    GROUP BY u.userID) as temp
+WHERE temp.safety >= 3 AND temp.fun >= 3.5
+LIMIT 15;
+
+
+SELECT partyID, userID, tags, first, last
+FROM ActiveParty NATURAL JOIN User
+WHERE TAGS LIKE "%C%" OR FIRST LIKE "%C%" OR LAST LIKE "%C%"
+
+UNION 
+
+SELECT partyID, userID, tags, first, last
+FROM ArchiveParty NATURAL JOIN User
+WHERE TAGS LIKE "%C%" OR FIRST LIKE "%C%" OR LAST LIKE "%C%"
+ORDER BY partyID
+LIMIT 15;

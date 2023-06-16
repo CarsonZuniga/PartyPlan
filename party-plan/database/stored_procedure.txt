@@ -1,0 +1,33 @@
+DELIMITER //
+
+CREATE PROCEDURE check_expiring()
+BEGIN
+    DECLARE varPartyID INT UNSIGNED;
+    DECLARE varEndTime DATETIME;
+    DECLARE varCurrTime DATETIME;
+
+	DECLARE exit_loop BOOLEAN DEFAULT FALSE;
+    DECLARE cusCur CURSOR FOR   (SELECT DISTINCT partyID
+                                FROM ActiveParty JOIN (SELECT u.userID, AVG(safety) as safety, AVG(fun) as fun
+                                    FROM User u JOIN Rating r ON (u.userID = r.userID)
+                                    GROUP BY u.userID) as temp);
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+
+    OPEN cusCur;
+    cloop: LOOP
+        FETCH cusCur INTO varPartyID;
+        SELECT end_time, time.curr_time INTO varEndTime, varCurrTime FROM ActiveParty JOIN (SELECT NOW() AS curr_time) as time WHERE partyID = varPartyID;
+        IF(exit_loop) THEN
+            LEAVE cloop;
+        END IF;
+        IF (varEndTime <= varCurrTime) THEN
+            DELETE FROM ActiveParty
+            WHERE partyID=varPartyID; 
+        END IF;
+    END LOOP cloop;
+    
+    CLOSE cusCur;
+END; //
+
+DELIMITER ;

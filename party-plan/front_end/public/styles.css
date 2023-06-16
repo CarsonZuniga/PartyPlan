@@ -1,0 +1,38 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: rgb(235, 224, 224) !important;
+}
+
+.Party-Widget {
+    color: black;
+    border-style: solid;
+    margin: 10px 10px;
+    text-align: center;
+    background-color: white;
+    padding: auto;
+}
+
+.col {
+    text-align: center;
+}
+
+.col-md-4 {
+    flex: 0 0 33.3333333%;
+    max-width: 33.3333333%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    display: flex;
+}
+
+.popover-map-li {
+    list-style-type: none;
+}
+
+.d-inline-block {
+    width: 250px;
+    display:inline-block;
+}

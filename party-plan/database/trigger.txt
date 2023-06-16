@@ -1,0 +1,22 @@
+DELIMITER //
+CREATE TRIGGER move_deleted
+AFTER DELETE ON ActiveParty
+FOR EACH ROW
+BEGIN
+	DECLARE insert_start_time DATETIME;
+	DECLARE insert_end_time DATETIME;
+	IF OLD.start_time > NOW() THEN
+		SET insert_start_time = NOW();
+	ELSE
+		SET insert_start_time = OLD.start_time;
+	END IF;
+	IF OLD.end_time > NOW() THEN
+		SET insert_end_time = NOW();
+	ELSE
+		SET insert_end_time = OLD.end_time;
+	END IF;
+
+	INSERT INTO ArchiveParty VALUES (OLD.partyID, OLD.userID, OLD.latitude, OLD.longitude, OLD.tags, OLD.capacity, insert_start_time, insert_end_time);
+END; //
+
+DELIMITER ;
